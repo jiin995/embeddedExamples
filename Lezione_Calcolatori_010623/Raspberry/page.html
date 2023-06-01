@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Home Control</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  
+
+</head>
+<body>
+
+<div class="container-fluid">
+  <h1>Home Control!</h1>
+  <div class="row">
+    <div class="col-sm-4"><button id="open_door" class="cmd" cmd="o">Apri porta</button></div>
+    <div class="col-sm-4"><button id="close_door" class="cmd" cmd="c">Chiudi porta</button></div>
+  </div>
+<hr>
+    <div class="row">
+        <div class="col-sm-4"><button id="led0" class="cmd" cmd="0">Led 0</button></div>
+        <div class="col-sm-4"><button id="led1" class="cmd" cmd="1">Led 1</button></div>
+        <div class="col-sm-4"><button id="led2" class="cmd" cmd="2">Led 2</button></div>
+  </div>
+</div>
+
+<script>
+    var baseUrl="http://192.168.0.155:1880/command?cmd=";
+    $( ".cmd" ).on( "click", function() {
+        var commandURL=baseUrl+$(this).attr('cmd');
+        console.log(`Command URL: ${commandURL}`);
+        $.get(commandURL, function(data, status){
+            console.log(`Response: ${data}\nStatusCode: ${status}`);
+        });
+    } );
+</script>
+</body>
+</html>

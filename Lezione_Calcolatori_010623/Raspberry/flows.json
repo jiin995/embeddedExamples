@@ -1,0 +1,307 @@
+[
+    {
+        "id": "a7a09e2ea018e28a",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "69bab45af18c1399",
+        "type": "http in",
+        "z": "a7a09e2ea018e28a",
+        "name": "homepageRequest",
+        "url": "/home",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 430,
+        "y": 260,
+        "wires": [
+            [
+                "6175f874fb7a8185"
+            ]
+        ]
+    },
+    {
+        "id": "42198e610a4e75a9",
+        "type": "http in",
+        "z": "a7a09e2ea018e28a",
+        "name": "commandRequest",
+        "url": "/command",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 410,
+        "y": 400,
+        "wires": [
+            [
+                "9e38bd9b7b532ee7"
+            ]
+        ]
+    },
+    {
+        "id": "dee8d281f60d9399",
+        "type": "http response",
+        "z": "a7a09e2ea018e28a",
+        "name": "homepageResponse",
+        "statusCode": "",
+        "headers": {},
+        "x": 840,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "6175f874fb7a8185",
+        "type": "template",
+        "z": "a7a09e2ea018e28a",
+        "name": "homepage",
+        "field": "payload",
+        "fieldType": "msg",
+        "format": "handlebars",
+        "syntax": "mustache",
+        "template": "<!DOCTYPE html>\n<html>\n<head>\n  <title>Home Control</title>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <link rel=\"stylesheet\" href=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\">\n  <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js\"></script>\n  <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js\"></script>\n  \n\n</head>\n<body>\n\n<div class=\"container-fluid\">\n  <h1>Home Control!</h1>\n  <div class=\"row\">\n    <div class=\"col-sm-4\"><button id=\"open_door\" class=\"cmd\" cmd=\"o\">Apri porta</button></div>\n    <div class=\"col-sm-4\"><button id=\"close_door\" class=\"cmd\" cmd=\"c\">Chiudi porta</button></div>\n  </div>\n<hr>\n    <div class=\"row\">\n        <div class=\"col-sm-4\"><button id=\"led0\" class=\"cmd\" cmd=\"0\">Led 0</button></div>\n        <div class=\"col-sm-4\"><button id=\"led1\" class=\"cmd\" cmd=\"1\">Led 1</button></div>\n        <div class=\"col-sm-4\"><button id=\"led2\" class=\"cmd\" cmd=\"2\">Led 2</button></div>\n  </div>\n</div>\n\n<script>\n    var baseUrl=\"http://172.20.10.8:1880/command?cmd=\";\n    $( \".cmd\" ).on( \"click\", function() {\n        var commandURL=baseUrl+$(this).attr('cmd');\n        console.log(`Command URL: ${commandURL}`);\n        $.get(commandURL, function(data, status){\n            console.log(`Response: ${data}\\nStatusCode: ${status}`);\n        });\n    } );\n</script>\n</body>\n</html>\n",
+        "output": "str",
+        "x": 610,
+        "y": 260,
+        "wires": [
+            [
+                "dee8d281f60d9399"
+            ]
+        ]
+    },
+    {
+        "id": "9e38bd9b7b532ee7",
+        "type": "function",
+        "z": "a7a09e2ea018e28a",
+        "name": "parseCommandReq",
+        "func": "msg.payload = msg.payload.cmd;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 400,
+        "wires": [
+            [
+                "6e56304f70edc01e",
+                "b891a5590afa4c61",
+                "8ea56e08932c852b"
+            ]
+        ]
+    },
+    {
+        "id": "b891a5590afa4c61",
+        "type": "http response",
+        "z": "a7a09e2ea018e28a",
+        "name": "commandResponse",
+        "statusCode": "",
+        "headers": {},
+        "x": 940,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "6e56304f70edc01e",
+        "type": "debug",
+        "z": "a7a09e2ea018e28a",
+        "name": "debugParseCommand",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 940,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "8ea56e08932c852b",
+        "type": "serial out",
+        "z": "a7a09e2ea018e28a",
+        "name": "",
+        "serial": "aab9e75d01fcc753",
+        "x": 920,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "b7ee992d9bb73ba6",
+        "type": "mqtt in",
+        "z": "a7a09e2ea018e28a",
+        "name": "",
+        "topic": "cmd",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "4688914dcac3bb24",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 390,
+        "y": 740,
+        "wires": [
+            [
+                "1bb2d2d4b2a6a979",
+                "8ea56e08932c852b"
+            ]
+        ]
+    },
+    {
+        "id": "11cfc7f6b695878e",
+        "type": "inject",
+        "z": "a7a09e2ea018e28a",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 400,
+        "y": 640,
+        "wires": [
+            [
+                "2e557279c73c9b46"
+            ]
+        ]
+    },
+    {
+        "id": "2e557279c73c9b46",
+        "type": "mqtt out",
+        "z": "a7a09e2ea018e28a",
+        "name": "",
+        "topic": "cmd",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "4688914dcac3bb24",
+        "x": 650,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "1bb2d2d4b2a6a979",
+        "type": "debug",
+        "z": "a7a09e2ea018e28a",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "e21744dbf6a29059",
+        "type": "http in",
+        "z": "a7a09e2ea018e28a",
+        "name": "",
+        "url": "/pippo",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 290,
+        "y": 500,
+        "wires": [
+            [
+                "9ed5253d726e6fbf"
+            ]
+        ]
+    },
+    {
+        "id": "9ed5253d726e6fbf",
+        "type": "http response",
+        "z": "a7a09e2ea018e28a",
+        "name": "",
+        "statusCode": "",
+        "headers": {},
+        "x": 550,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "aab9e75d01fcc753",
+        "type": "serial-port",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
+        "databits": "8",
+        "parity": "none",
+        "stopbits": "1",
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": "10000"
+    },
+    {
+        "id": "4688914dcac3bb24",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "b-12df880b-3eb1-4e93-921f-c038796d97b3-1.mq.eu-west-1.amazonaws.com",
+        "port": "8883",
+        "tls": "24af6e4f5cc673e7",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "24af6e4f5cc673e7",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    }
+]
